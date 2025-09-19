@@ -1,0 +1,12 @@
+
+fields for postgres sql databse:
+usersname-> user123
+password->Adivinha12345
+database name -> chatbot
+
+
+django super user:
+
+diogo
+diogo.work123@gmail.com
+Adivinha12345

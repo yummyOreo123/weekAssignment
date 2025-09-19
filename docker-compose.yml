@@ -1,0 +1,33 @@
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: chatbot
+      POSTGRES_USER: user123
+      POSTGRES_PASSWORD: Adivinha12345
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: ./django
+    command: gunicorn djangoApp.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DJANGO_SECRET_KEY: django-insecure-kkz5(i8p7^lis1kc9w34=&zdxsvwq%1zx@5=84%a)@+$@5+t%j
+      SQL_NAME: chatbot
+      SQL_USER: user123
+      SQL_PASSWORD: Adivinha12345
+      SQL_HOST: db
+      SQL_PORT: 5432
+
+volumes:
+  postgres_data:

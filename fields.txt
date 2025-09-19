@@ -7,6 +7,6 @@ database name -> chatbot
 
 django super user:
 
-diogo
+diogo or user
 diogo.work123@gmail.com
 Adivinha12345

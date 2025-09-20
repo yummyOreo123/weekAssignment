@@ -3,3 +3,6 @@ fields.txt
 __pycache__/
 .docker-compose.yml
 .chatBotApp
+static/
+staticfiles/
+media/

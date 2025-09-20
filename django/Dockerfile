@@ -18,4 +18,4 @@ RUN pip install psycopg2-binary
 
 COPY . /app/
 
-CMD ["gunicorn", "./django/djangoApp.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "djangoApp.wsgi:application", "--bind", "0.0.0.0:8000", "--chdir", "/app"]

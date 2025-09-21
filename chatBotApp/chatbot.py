@@ -2,7 +2,8 @@ from botclass import Bot
 import requests
 import ast
 
-BASE_URL = "http://127.0.0.1:8000/api"
+#BASE_URL = "http://127.0.0.1:8000/api"
+BASE_URL ="http://13.60.227.6:8000/api"
 
 foods = {
     "salad": "vegetarian",
@@ -32,7 +33,7 @@ foods = {
     "meat lasagna": "non-vegetarian"
     }   
 
- #Conversation between AI and user
+ #Conversation between AI and user(task3)
 def chatbot_send_question(chatbot1):
 
     response = chatbot1.openAI_question_answer("You are now talking with an user, I want you to ask him literrly only these question 'What are your top 3 favorite foods?'")   
@@ -43,8 +44,8 @@ def chatbot_send_question(chatbot1):
     response = chatbot1.openAI_question_answer(f"You are now talking with an user, the user answered to your previews question that his favourites food are {user_answer}, please thank him for his answer, give a short opnion about his choice and say good bye")   
     print(f"Bot answered you!: {response.choices[0].message.content}")
 
-#Simulate 100 conversations between 2 AIs(start by reseting the database)
-def simnulate_100_conversations(chatbot1,chatbot2):
+#Simulate 100 conversations between 2 AIs(start by reseting the database)(task4)
+def simulate_100_conversations(chatbot1,chatbot2):
 
     response = requests.delete(f"{BASE_URL}/conversations/delete_all/")
     print("DELETE response:", response.json())
@@ -81,7 +82,7 @@ def simnulate_100_conversations(chatbot1,chatbot2):
         print("POST response:", response.json())
         print("\n")
 
-#List all conversations that are vegetarian
+#List all conversations that are vegetarian(task5)
 def list_vegetarian_conversations():
 
     user = input("Enter username for authentication: ")
@@ -109,7 +110,7 @@ def main():
             case "1":
                 chatbot_send_question(chatbot1)
             case "2":
-                simnulate_100_conversations(chatbot1,chatbot2)
+                simulate_100_conversations(chatbot1,chatbot2)
             case "3":
                 list_vegetarian_conversations()
             case "4":

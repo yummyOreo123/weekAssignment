@@ -1,8 +1,6 @@
-fields.txt
 *.env
 __pycache__/
 .docker-compose.yml
-.chatBotApp
 static/
 staticfiles/
 media/

@@ -8,8 +8,6 @@ from rest_framework import status
 from .models import Conversation
 from rest_framework.permissions import IsAuthenticated
 
-
-
 class ConversationListCreateView(generics.ListCreateAPIView):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,11 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#load_dotenv(BASE_DIR / ".env")
+load_dotenv(BASE_DIR / ".env")
 
 ## Uncomment and configure for production
-#SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
-SECRET_KEY = 'django-insecure-kkz5(i8p7^lis1kc9w34=&zdxsvwq%1zx@5=84%a)@+$@5+t%j'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Read DEBUG from environment so we can control it in Elastic Beanstalk
@@ -81,29 +80,17 @@ WSGI_APPLICATION = 'djangoApp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Using hardcoded values for development and testing
+## Uncomment and configure for production 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chatbot',
-        'USER': 'user123',
-        'PASSWORD':'Adivinha12345',
-        'HOST':'chatbot.chk68wgqspbt.eu-north-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'NAME': os.environ.get("SQL_NAME"),
+        'USER': os.environ.get("SQL_USER"),
+        'PASSWORD': os.environ.get("SQL_PASSWORD"),
+        'HOST': os.environ.get("SQL_HOST"),
+        'PORT': os.environ.get("SQL_PORT"),
     }
 }
-
-## Uncomment and configure for production 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': os.environ.get("SQL_NAME"),
-#        'USER': os.environ.get("SQL_USER"),
-#        'PASSWORD': os.environ.get("SQL_PASSWORD"),
-#        'HOST': os.environ.get("SQL_HOST"),
-#        'PORT': os.environ.get("SQL_PORT"),
-#    }
-#}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

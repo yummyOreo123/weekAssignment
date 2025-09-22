@@ -1,12 +1,12 @@
 from rest_framework import generics
 from .models import Conversation
 from .serializers import ConversationSerializer,ConversationGetVegetarianSerializer
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Conversation
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import render
 
 class ConversationListCreateView(generics.ListCreateAPIView):
     queryset = Conversation.objects.all()
@@ -28,3 +28,4 @@ class GetConversationsVegetarianTrue(APIView):
         queryset = Conversation.objects.filter(is_vegetarian=True)
         serializer = ConversationGetVegetarianSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    

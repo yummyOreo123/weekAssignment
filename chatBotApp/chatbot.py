@@ -36,8 +36,8 @@ foods = {
  #Conversation between AI and user(task3)
 def chatbot_send_question(chatbot1):
 
-    response = chatbot1.openAI_question_answer("You are now talking with an user, I want you to ask him literrly only these question 'What are your top 3 favorite foods?'")   
-    print(f"Bot asked you a question!: {response.choices[0].message.content}")
+    response = chatbot1.openAI_question_answer("You are now talking with an user, I want you to ask him literally only these question 'What are your top 3 favorite foods?'")   
+    print(f"Bot asked you a question: {response.choices[0].message.content}")
 
     user_answer = input("Your answer: ")
   

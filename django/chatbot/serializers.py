@@ -10,4 +10,4 @@ class ConversationSerializer(serializers.ModelSerializer):
 class ConversationGetVegetarianSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversation
-        fields = ['chatgpt_b_answer']  # only this field
+        fields = ['chatgpt_b_answer']  

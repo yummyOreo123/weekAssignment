@@ -56,8 +56,18 @@ def simulate_100_conversations(chatbot1,chatbot2):
         response1 = chatbot1.openAI_question_answer("I want you to ask literelly and only these question,dont say anything else beside : 'What are your top 3 favorite foods?'")   
         print(f"Bot question!: {response1.choices[0].message.content}")
 
-        #response2 = chatbot2.openAI_question_answer(f"Using this list of foods: {list(foods.keys())}, please select randomly out of the 25 foods in this list, 3 and only 3 foods from this list and answer in a list format like this: ['food1', 'food2', 'food3']. Answer only the list, nothing else. Also dont change in any form the name of the disshes I gave you, use exactly the same ones from the list for your answer.")
-        response2 = chatbot2.openAI_question_answer(f"Using this list of foods: {list(foods.keys())}, I want you to select randomly 3 elements from this list and answer in a list format like this: ['food1', 'food2', 'food3']. Answer only the list, nothing else. Also dont change in any form the name of the elements, they have to be exactly the same names of the elemntes of the list I gave you ")    
+        #response2 = chatbot2.openAI_question_answer(
+        #f"Using exactly this Python list {list(foods.keys())}, select 3 random items. "
+        #"Return them as a valid Python list, e.g. ['food1', 'food2', 'food3']." \
+        #"Answer only with the list, nothing else. " \
+        #"Do NOT invent or modify names — copy them exactly from the list."
+        #)
+
+        response2 = chatbot2.openAI_question_answer(f"Using this list of foods: {list(foods.keys())},"
+        "I want you to select randomly 3 elements from this list and answer in a list format like this: ['food1', 'food2', 'food3']."
+        "Answer only the list, nothing else. Also dont change in any form the name of the elements, they have to be exactly the same names of the elemntes of the list I gave you "
+        )   
+
         raw = response2.choices[0].message.content
 
         foods_selected = ast.literal_eval(raw)

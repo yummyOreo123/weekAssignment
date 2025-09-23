@@ -23,6 +23,7 @@ def simulate_100_conversations(chatbot1,chatbot2):
     response = requests.delete(f"{BASE_URL}/conversations/delete_all/")
     print("DELETE response:", response.json())
 
+    #Simulate 100 conversations between 2 AIs
     for x in range(100):
         print(f"Iteration {x+1}")
 
@@ -34,37 +35,38 @@ def simulate_100_conversations(chatbot1,chatbot2):
         "['food1', 'food2', 'food3']"
         )
 
+        # Ensure valid response with 3 retries, so we get exactly 3 foods in list format
         for attempt in range(3):
             response = chatbot1.openAI_question_answer(prompt)
 
             raw = response.choices[0].message.content.strip()
 
             try:
-                validated = validate_food_response(raw)
+                validated = validate_food_response(raw) #validate response
                 break  
             except Exception as e:
                 print(f"Validation failed (attempt {attempt+1}): {e}")
 
  
-        foods_selected = validated.foods
+        foods_selected = validated.foods #list of 3 foods
 
         final_answers = []
 
-        for food in foods_selected:
-            for attempt in range(3):
+        for food in foods_selected: #check if each food is vegetarian or non-vegetarian
+            for attempt in range(3): #3 attempts to validate each food vegetarian or not
                 response = chatbot1.openAI_question_answer(
                     f"Confirm if food {food} is vegetarian or non-vegetarian, answer ONLY with the word vegetarian or non-vegetarian."
                 )
                 raw = response.choices[0].message.content.strip()
                 try:
-                    validated = validate_food_bool(raw)
+                    validated = validate_food_bool(raw) #validate response
                     final_answers.append(validated.type)
                     break
                 except Exception as e:
                     print(f"Validation failed for {food} (attempt {attempt+1}): {e}")
 
 
-        is_vegetarian = all(f == "vegetarian" for f in final_answers)
+        is_vegetarian = all(f == "vegetarian" for f in final_answers) #True if all foods are vegetarian
     
         new_post = {
             "conversation_number": x+1,

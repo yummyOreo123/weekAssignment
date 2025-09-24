@@ -1,6 +1,7 @@
 from botclass import Bot
 import requests
 from auxiliary import  validate_food_response, validate_food_bool
+import random
 
 #BASE_URL = "http://127.0.0.1:8000/api"
 BASE_URL ="http://13.60.227.6:8000/api"
@@ -17,68 +18,99 @@ def chatbot_send_question(chatbot1):
     print(f"Bot answered you!: {response.choices[0].message.content}")
 
 
+def auxiliary_food_veg_notveg(foods_selected,chatbot2):
+    final_answers = []
+    for food in foods_selected:                 #check if each food is vegetarian or non-vegetarian
+
+        for attempt in range(3):                #attempts to validate if each food vegetarian or not
+
+            response = chatbot2.openAI_question_answer(
+            f"Confirm if food {food} is vegetarian or non-vegetarian, answer ONLY with the word vegetarian or non-vegetarian" )
+            raw = response.choices[0].message.content.strip()
+            print(f"Response for {food}: {raw}")
+
+            try:                                     #if the block fails creata an expection and try again         
+                validated = validate_food_bool(raw)  #validate response, retutns "vegetarian" or "non-vegetarian"
+                final_answers.append(validated.type)
+                break
+
+            except Exception as e:
+                print(f"Validation failed for {food} (attempt {attempt+1})")
+    return final_answers
+
+
 #Simulate 100 conversations between 2 AIs(start by reseting the database)(task4)
 def simulate_100_conversations(chatbot1,chatbot2):
 
-    response = requests.delete(f"{BASE_URL}/conversations/delete_all/")
+    response = requests.delete(f"{BASE_URL}/conversations/delete_all/") #clear the database table
     print("DELETE response:", response.json())
 
-    #Simulate 100 conversations between 2 AIs
-    for x in range(100):
-        print(f"Iteration {x+1}")
+    #category = random.choice(["vegetarian", "non-vegetarian", "mixed"])
 
+    #prompt = (
+    #"Generate a random list of exactly 3 dishes in this format: ['food1', 'food2', 'food3'].\n"
+    #"You must RANDOMLY choose one of the following list types each time you answer:\n"
+    #"1. A list where all 3 foods are vegetarian.\n"
+    #"2. A list where all 3 foods are non-vegetarian.\n"
+    #"3. A mixed list with both vegetarian and non-vegetarian items.\n"
+    #"Do not explain, do not add text, only output the list in the required format."
+    #)
+
+    #Try to force a randomization but the AI, threw probaility always chooses the safest path
+    #prompt = (
+    #    "Flip a coin. "
+    #    "If its heads → return a vegetarian list of 3 dishes. "
+    #    "If its tails → return a non-vegetarian list of 3 dishes." 
+    #    "Do not reveal the coin flip, just output the chosen list in this format: ['food1','food2','food3']"
+    #    "Do not explain, do not add text, only output the list in the required format.")
+
+    # Ensure valid response with 3 retries, so we get exactly 3 foods in list format
+
+
+    for x in range(100):
+        
+        category = random.choice(["vegetarian", "non-vegetarian", "mixed"])
+        print(category)
+        prompt = (
+            f"Generate a random list of exactly 3 {category} dishes "
+            "in this format: ['food1', 'food2', 'food3']. "
+            "Try to use always new dishes so we dont get repetited dishes" # this 
+            "Do not explain, do not add text, only output the list in the required format."
+        )
+       
+        print(f"Iteration {x+1}")
         response1 = chatbot1.openAI_question_answer("I want you to ask literelly and only these question,dont say anything else beside : 'What are your top 3 favorite foods?'")   
         print(f"Bot question!: {response1.choices[0].message.content}")
 
-        prompt = (
-        "I want you to select randomly 3 dishes/foods and answer ONLY in this list format: "
-        "['food1', 'food2', 'food3']"
-        )
+        for attempt in range(3):                                    #3 tries to get a valid response
 
-        # Ensure valid response with 3 retries, so we get exactly 3 foods in list format
-        for attempt in range(3):
             response = chatbot1.openAI_question_answer(prompt)
-
-            raw = response.choices[0].message.content.strip()
-
-            try:
-                validated = validate_food_response(raw) #validate response
-                break  
-            except Exception as e:
-                print(f"Validation failed (attempt {attempt+1}): {e}")
-
- 
-        foods_selected = validated.foods #list of 3 foods
-
-        final_answers = []
-
-        for food in foods_selected: #check if each food is vegetarian or non-vegetarian
-            for attempt in range(3): #3 attempts to validate each food vegetarian or not
-                response = chatbot1.openAI_question_answer(
-                    f"Confirm if food {food} is vegetarian or non-vegetarian, answer ONLY with the word vegetarian or non-vegetarian."
-                )
-                raw = response.choices[0].message.content.strip()
-                try:
-                    validated = validate_food_bool(raw) #validate response
-                    final_answers.append(validated.type)
-                    break
-                except Exception as e:
-                    print(f"Validation failed for {food} (attempt {attempt+1}): {e}")
-
-
-        is_vegetarian = all(f == "vegetarian" for f in final_answers) #True if all foods are vegetarian
+            raw = response.choices[0].message.content.strip()       # clean response, removing blanck spances and /n
     
-        new_post = {
-            "conversation_number": x+1,
-            "chatgpt_a_question": response1.choices[0].message.content,
-            "chatgpt_b_answer": foods_selected,
-            "is_vegetarian": is_vegetarian
-        }
+            try:                                                    #if the block fails creata an expection and try again
+                validated = validate_food_response(raw)             # validate response
+                foods_selected = validated.foods                    # list of 3 foods from the validated response
+                print(f"Foods selected: {foods_selected}")
 
-        #print(new_post)
+                final_answers = auxiliary_food_veg_notveg(foods_selected,chatbot2)      #list of "vegetarian" or "non-vegetarian" , corresponding to the food list
 
-        response = requests.post(f"{BASE_URL}/conversations/", json=new_post)
-        print("POST response:", response.json())
+                is_vegetarian = all(f == "vegetarian" for f in final_answers)           #True if all foods are vegetarian
+            
+                new_post = {
+                    "conversation_number": x+1,
+                    "chatgpt_a_question": "What are your top 3 favorite foods?",
+                    "chatgpt_b_answer": foods_selected,
+                    "is_vegetarian": is_vegetarian
+                }
+
+                #print(new_post)
+                response = requests.post(f"{BASE_URL}/conversations/", json=new_post)
+                print("POST response:", response.json())
+                break  
+
+            except Exception as e:
+                print(f"Validation failed (attempt {attempt+1}): {e}\n")
+
         print("\n")
 
 #List all conversations that are vegetarian(task5)

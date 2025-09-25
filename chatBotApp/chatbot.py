@@ -74,7 +74,7 @@ def simulate_100_conversations(chatbot1,chatbot2):
         prompt = (
             f"Generate a random list of exactly 3 {category} dishes "
             "in this format: ['food1', 'food2', 'food3']. "
-            "Try to use always new dishes so we dont get repetited dishes" # this 
+            "Try to use always new dishes and types of foood(deserts,main meals) so we dont get repetited dishes" # this 
             "Do not explain, do not add text, only output the list in the required format."
         )
        
@@ -98,7 +98,7 @@ def simulate_100_conversations(chatbot1,chatbot2):
             
                 new_post = {
                     "conversation_number": x+1,
-                    "chatgpt_a_question": "What are your top 3 favorite foods?",
+                    "chatgpt_a_question": response1.choices[0].message.content,
                     "chatgpt_b_answer": foods_selected,
                     "is_vegetarian": is_vegetarian
                 }

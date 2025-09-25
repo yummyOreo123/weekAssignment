@@ -2,6 +2,7 @@ from botclass import Bot
 import requests
 from auxiliary import  validate_food_response, validate_food_bool
 import random
+import getpass
 
 #BASE_URL = "http://127.0.0.1:8000/api"
 BASE_URL ="http://13.60.227.6:8000/api"
@@ -116,8 +117,8 @@ def simulate_100_conversations(chatbot1,chatbot2):
 #List all conversations that are vegetarian(task5)
 def list_vegetarian_conversations():
 
-    user = input("Enter username for authentication: ")
-    password = input("Enter password for authentication: ")
+    user = input("Enter username for authentication: ") 
+    password = getpass.getpass("Enter password for authentication: ") #if using https and a well implemented auth system, this would be replaced by a JWT token or a DRF token
 
     response = requests.get(f"{BASE_URL}/conversations/get_vegeterians/",auth=(user, password))
 

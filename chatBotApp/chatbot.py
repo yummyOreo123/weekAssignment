@@ -19,6 +19,7 @@ def chatbot_send_question(chatbot1):
     print(f"Bot answered you!: {response.choices[0].message.content}")
 
 
+#auxiliary function used check what kind of food the AI generated(vegeterien or not).Also checks and validates the AI answers
 def auxiliary_food_veg_notveg(foods_selected,chatbot2):
     final_answers = []
     for food in foods_selected:                 #check if each food is vegetarian or non-vegetarian
